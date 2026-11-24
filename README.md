@@ -10,14 +10,14 @@ This repository contains the first runnable web/PWA interface for **abbasdeep**.
 - Navigation for conversion, training, voice library, and setup guide.
 - One-tap launch of the official Applio Colab notebook.
 - Local audio preview before handing the workflow to Applio.
-- Optional manual opening of an Applio Gradio share URL on its own page.
+- Dedicated "Connect project" screen: enter an Applio `.gradio.live` URL and try to show it directly in an iframe, with an external-browser fallback.
 - PWA manifest, app icon, and a small offline app-shell cache.
 
 ## Important integration boundary
 
 abbasdeep does **not** control a Colab runtime, mount Drive, upload training files to Colab, or perform voice conversion itself yet. Google sign-in, Drive authorization, notebook execution, and the Applio runtime remain in Google's/Applio's own interfaces. The app never asks for a Google password, browser cookie, OAuth token, or Colab session credential.
 
-The first milestone intentionally uses an explicit browser hand-off. Automatic embedding/proxying of a Colab-hosted Gradio interface is not assumed: it must be tested against current Colab policies, Gradio/browser framing restrictions, and the session's actual behavior before being implemented.
+The app does not proxy the Gradio session: the browser connects directly to the supplied share URL. Embedding depends on remote response headers and browser behavior; use the external-browser fallback if framing is blocked. Google Colab Free may terminate sessions that bypass the notebook UI to interact primarily through an external web UI, so this is not presented as a guaranteed or policy-approved Colab Free workflow. See [the connection guide](docs/MOBILE_APPLIO.md).
 
 ## Run locally
 

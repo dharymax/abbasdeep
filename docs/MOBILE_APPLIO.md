@@ -1,59 +1,24 @@
-# Applio on mobile — compatibility and styling
+# ربط واجهة Applio داخل abbasdeep
 
-## Upstream audit
+## الاستخدام
 
-The upstream Applio web interface is a Gradio app. In the current upstream source:
+1. افتح دفتر Applio في Colab وشغّل خلايا الدفتر وفق خطواته.
+2. انسخ رابط Gradio العام الذي يظهر بعد تشغيل الخادم، مثل `https://xxxxx.gradio.live/`.
+3. افتح abbasdeep ثم انتقل إلى **ربط المشروع**.
+4. الصق الرابط واضغط **اتصال بالمشروع**.
+5. سيحاول التطبيق عرض واجهة Applio داخل إطار في صفحة abbasdeep. إذا منع المتصفح أو خادم Gradio التضمين، استخدم **فتح خارجياً**.
 
-- `app.py` builds the interface with `gr.Blocks` and loads `stylesheet()` from `assets/app_shell.py`.
-- `assets/app_shell.py` loads `assets/ui/shell.css`.
-- The upstream stylesheet already has a mobile breakpoint at 800px: the side navigation becomes a collapsible menu, navigation becomes a three-column grid, and content takes the available width.
-- At 680px, selected output panels collapse to a single column.
+الربط مباشر من المتصفح إلى رابط Gradio؛ لا يوجد خادم وسيط ولا نقل لبياناتك عبر abbasdeep. يحفظ التطبيق الرابط محلياً في المتصفح كي لا تحتاج إلى لصقه في كل مرة.
 
-The abbasdeep patch adds narrower-screen safeguards: horizontal tab scrolling, larger touch targets, 16px form text to avoid browser auto-zoom, less horizontal overflow, and safe-area-aware notifications.
+## الروابط العامة والخصوصية
 
-## Google Colab Free limitation
+روابط Gradio Share عامة لمن يمتلك الرابط، وتعمل كأنبوب إلى تطبيق Gradio الذي يعمل داخل جلسة التشغيل. لا ترسل الرابط إلى أشخاص آخرين إذا كانت الواجهة تعرض نماذج أو ملفات أو وظائف لا تريد مشاركتها. صلاحية الرابط مرتبطة بخدمة المشاركة وحالة جلسة التشغيل.
 
-Google's Colab FAQ states that free managed runtimes may be terminated for bypassing the notebook UI to interact primarily through an external web UI. It specifically calls out this pattern for content-generation workloads.
+## ملاحظة Google Colab Free
 
-Therefore:
-- For a free managed Colab session, keep the Colab notebook as the primary interaction surface and follow the notebook's intended workflow.
-- Do not treat an external Gradio share page embedded in abbasdeep as a supported free-Colab mode.
-- The optional CSS patch is for a local/self-managed runtime, or another runtime/account where external Applio web UI use is permitted.
+توضح سياسة Colab أن تجاوز واجهة الدفتر للتفاعل أساساً عبر واجهة ويب خارجية قد يؤدي إلى إنهاء جلسات Colab المجانية. لذلك يضيف abbasdeep عرض iframe كميزة تقنية للروابط التي تسمح بيئة تشغيلها بهذا الاستخدام، لكنه لا يضمن أن هذا النمط مسموح أو مستقر على Colab Free. استخدم واجهة الدفتر نفسها إذا كنت تعتمد على موارد Colab المجانية، ولا تحاول إخفاء استخدام الواجهة الخارجية أو تجاوز قيود الجلسة.
 
-Reference: https://research.google.com/colaboratory/faq.html
-
-## Apply the optional CSS patch
-
-The patch does not alter Applio's training, conversion, model loading, or Python backend. It only appends responsive CSS to the upstream shell stylesheet.
-
-1. Clone Applio from its official repository.
-2. Keep the `patches/` and `tools/` folders from this abbasdeep repository alongside each other.
-3. Run:
-
-```bash
-python tools/apply_mobile_css.py --applio-dir /path/to/Applio
-```
-
-4. Restart the Applio UI.
-
-The script creates `assets/ui/shell.css.abbasdeep-backup` and is idempotent. To restore the original stylesheet:
-
-```bash
-python tools/apply_mobile_css.py --applio-dir /path/to/Applio --restore
-```
-
-## Mobile browser recommendations
-
-- Use a current mobile browser.
-- Keep browser zoom at 100%; the patch uses 16px form text to prevent automatic input zoom.
-- Use portrait orientation for ordinary conversion forms.
-- Rotate to landscape if a graph or dense panel is still cramped.
-- Allow microphone permission only when using Applio's real-time features and only on a trusted session.
-- Gradio share links are public URLs; do not expose sensitive files or leave a session running unnecessarily.
-
-## What the patch does not do
-
-- It does not embed the Gradio app in abbasdeep.
-- It does not keep Colab sessions alive or increase quotas.
-- It does not make a free Colab external-UI workflow compliant.
-- It does not transfer selected files from the abbasdeep browser page into the Colab runtime.
+المراجع:
+- [Gradio share links](https://gradio.app/guides/understanding-gradio-share-links)
+- [Gradio sharing and embedding](https://gradio.app/main/guides/sharing-your-app)
+- [Google Colab FAQ](https://research.google.com/colaboratory/faq.html)

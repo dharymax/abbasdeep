@@ -187,3 +187,44 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #b9aa
 .mobile-policy-note strong{display:flex;align-items:center;gap:7px;color:#8b6727;font-size:10px}
 .mobile-policy-note p{font-size:10px;line-height:1.9;color:#826f4c;margin:8px 0 0}
 @media(max-width:620px){.mobile-feature-grid{grid-template-columns:1fr;gap:8px}.mobile-feature-grid>div{padding:10px}.mobile-policy-note p{font-size:9px}}
+
+/* Direct Applio project connection */
+.project-connect-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:24px}
+.project-step-card{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:12px;min-width:0;padding:20px}
+.project-step-number{position:absolute;top:17px;left:18px;color:#b2aec4;font-size:10px;font-weight:800;direction:ltr}
+.project-step-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:#f0edff;color:#6e55d3}
+.project-step-copy h3{font-size:13px;margin:0;color:#33334b}
+.project-step-copy p{font-size:10px;color:#9292a5;line-height:1.8;margin:6px 0 0}
+.project-step-card .field-label{margin:2px 0 -5px}
+.project-step-card .micro-note{margin-top:0}
+.project-link-card{border-color:#dcd5fa;box-shadow:0 7px 24px #6550c30a}
+.project-link-card .project-step-icon{background:#eae5ff}
+.privacy-note-panel{display:flex;gap:13px;align-items:flex-start;margin-top:13px}
+.privacy-note-panel p{font-size:10px;color:#8b8b9e;line-height:1.9;margin:8px 0}
+.connected-badge{background:#e8f7ef;color:#37845f}
+.gradio-workspace-panel{min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 8px 26px #2820440a}
+.gradio-workspace-toolbar{min-height:54px;padding:10px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);background:#fcfcfe}
+.gradio-workspace-toolbar>div{display:flex;align-items:center;gap:9px;min-width:0;flex-wrap:wrap}
+.gradio-workspace-toolbar strong{font-size:11px;color:#44445c}
+.gradio-workspace-toolbar small{font-size:9px;color:#9696a9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:min(46vw,520px)}
+.gradio-live-indicator{width:8px;height:8px;border-radius:50%;background:#36a46d;box-shadow:0 0 0 4px #e1f4e9;flex:0 0 auto}
+.gradio-frame-shell{width:100%;height:calc(100vh - 250px);min-height:620px;background:#fff}
+.gradio-frame{display:block;width:100%;height:100%;min-height:inherit;border:0;background:#fff}
+.connect-empty-state{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;padding:44px 22px}
+.connect-empty-icon{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:#f0edff;color:#7055d9}
+.connect-empty-state h2{font-size:18px;margin:0;color:#3d3b55}
+.connect-empty-state p{max-width:540px;font-size:10px;line-height:2;color:#8d8da0;margin:0}
+.connect-empty-state .button{margin-top:4px}
+.guide-connect-cta{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.guide-connect-cta h3{margin:0}
+.guide-connect-cta p{font-size:10px;color:#9292a5;margin:6px 0 0}
+@media(max-width:820px){.project-connect-grid{grid-template-columns:1fr}}
+@media(max-width:620px){
+ .project-connect-grid{gap:10px;margin-top:18px}
+ .project-step-card{padding:16px}
+ .privacy-note-panel p{font-size:9px}
+ .gradio-frame-shell{height:calc(100dvh - 205px);min-height:580px}
+ .gradio-workspace-toolbar{padding:9px 11px}
+ .gradio-workspace-toolbar small{max-width:62vw}
+ .guide-connect-cta{align-items:stretch;flex-direction:column}
+}

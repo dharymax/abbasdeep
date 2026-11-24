@@ -3,15 +3,16 @@ import {
   AudioLines, AudioWaveform, ArrowLeft, ArrowUpLeft, BookOpen, Check,
   CheckCircle2, ChevronLeft, CircleHelp, Cloud, ExternalLink, FileAudio,
   FileUp, FolderOpen, Headphones, Home, Info, Link2, Play, Plus,
-  RefreshCw, ShieldCheck, Smartphone, Sparkles, Upload, Waves, X, Zap
+  ShieldCheck, Smartphone, Sparkles, Upload, Waves, X, Zap
 } from "lucide-react";
 
 const COLAB_URL = "https://colab.research.google.com/github/iahispano/applio/blob/main/assets/Applio.ipynb";
 
-type Page = "home" | "convert" | "training" | "voices" | "guide";
+type Page = "home" | "connect" | "convert" | "training" | "voices" | "guide";
 
 const navItems: { id: Page; label: string; icon: typeof Home }[] = [
   { id: "home", label: "الرئيسية", icon: Home },
+  { id: "connect", label: "ربط المشروع", icon: Link2 },
   { id: "convert", label: "تحويل الصوت", icon: AudioLines },
   { id: "training", label: "تدريب نموذج", icon: Waves },
   { id: "voices", label: "مكتبة الأصوات", icon: FolderOpen },
@@ -20,6 +21,7 @@ const navItems: { id: Page; label: string; icon: typeof Home }[] = [
 
 const pageTitles: Record<Page, { title: string; subtitle: string }> = {
   home: { title: "مساحة العمل", subtitle: "كل أدواتك الصوتية في مكان واحد." },
+  connect: { title: "ربط المشروع", subtitle: "أدخل رابط Gradio الذي أنشأه دفتر Applio في Colab لعرضه داخل مساحة العمل." },
   convert: { title: "تحويل الصوت", subtitle: "جهّز التسجيل واختر نموذج الصوت، ثم أكمل المعالجة في Applio." },
   training: { title: "تدريب نموذج صوتي", subtitle: "جهّز ملفات التسجيل قبل فتح دفتر Applio في Colab." },
   voices: { title: "مكتبة الأصوات", subtitle: "تابع نماذجك التي أنشأتها واحفظها في Google Drive." },
@@ -36,6 +38,7 @@ function App() {
   const [trainingFiles, setTrainingFiles] = useState<File[]>([]);
   const [audioUrl, setAudioUrl] = useState("");
   const [gradioUrl, setGradioUrl] = useState(() => localStorage.getItem("abbasdeep-gradio-url") || "");
+  const [activeGradioUrl, setActiveGradioUrl] = useState("");
   const [urlError, setUrlError] = useState("");
   const [notice, setNotice] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -62,19 +65,38 @@ function App() {
     window.open(COLAB_URL, "_blank", "noopener,noreferrer");
   };
 
-  const openApplio = () => {
+  const connectProject = () => {
     setUrlError("");
     try {
       const parsed = new URL(gradioUrl.trim());
-      if (parsed.protocol !== "https:" || !(parsed.hostname === "gradio.live" || parsed.hostname.endsWith(".gradio.live"))) {
-        setUrlError("أدخل رابط Gradio آمن ينتهي نطاقه بـ gradio.live.");
+      const allowedHost = parsed.hostname === "gradio.live" || parsed.hostname.endsWith(".gradio.live");
+      if (parsed.protocol !== "https:" || !allowedHost || parsed.username || parsed.password || (parsed.port && parsed.port !== "443")) {
+        setUrlError("أدخل رابط HTTPS صالحاً من نطاق gradio.live، مثل https://95c194d89bf572aa0b.gradio.live/");
         return;
       }
-      localStorage.setItem("abbasdeep-gradio-url", parsed.href);
-      window.open(parsed.href, "_blank", "noopener,noreferrer");
+      const cleanUrl = parsed.href;
+      localStorage.setItem("abbasdeep-gradio-url", cleanUrl);
+      setGradioUrl(cleanUrl);
+      setActiveGradioUrl(cleanUrl);
+      setPage("connect");
+      setMobileMenuOpen(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
-      setUrlError("الرابط غير مكتمل. انسخ رابط المشاركة الذي يعرضه Applio والصقه هنا.");
+      setUrlError("الرابط غير مكتمل. انسخ رابط Gradio الذي ظهر في خلية تشغيل Applio والصقه هنا.");
     }
+  };
+
+  const openApplioExternally = () => {
+    if (!activeGradioUrl) return;
+    window.open(activeGradioUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const disconnectProject = () => {
+    setActiveGradioUrl("");
+    setGradioUrl("");
+    localStorage.removeItem("abbasdeep-gradio-url");
+    setUrlError("");
+    setNotice("تم فصل رابط مشروع Applio من هذه الواجهة.");
   };
 
   const onAudioChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +131,7 @@ function App() {
               <p>واجهة أبسط للوصول إلى Applio وتشغيل أدواته من هاتفك، مع الاحتفاظ بـ Google Colab كمحرك للمعالجة.</p>
               <div className="hero-actions">
                 <button className="button button-light" onClick={openColab}><Play size={17} fill="currentColor" /> تشغيل Applio على Colab</button>
-                <button className="button button-ghost-light" onClick={() => navigate("guide")}>طريقة الاستخدام <ChevronLeft size={17} /></button>
+                <button className="button button-ghost-light" onClick={() => navigate("connect")}><Link2 size={16} /> ربط المشروع <ChevronLeft size={17} /></button>
               </div>
             </div>
             <div className="hero-art" aria-hidden="true">
@@ -144,21 +166,29 @@ function App() {
             </button>
           </div>
 
-          <div className="dashboard-lower">
-            <section className="panel connection-panel">
-              <div className="panel-title-row"><div><h3>حالة الاتصال</h3><p>حالة جلسة المعالجة الحالية</p></div><span className="status-dot status-idle" /></div>
-              <div className="connection-status">
-                <div className="connection-icon"><Cloud size={22} /></div>
-                <div><strong>لم يتم تشغيل جلسة بعد</strong><span>ابدأ دفتر Applio في Google Colab أولاً.</span></div>
-              </div>
-              <button className="button button-primary button-full" onClick={openColab}>فتح دفتر Google Colab <ExternalLink size={16} /></button>
-              <p className="micro-note"><Info size={13} /> توافر GPU ومدة الجلسة يخضعان لحدود Google Colab.</p>
+          <div className="project-connect-grid">
+            <section className="panel project-step-card">
+              <div className="project-step-number">01</div>
+              <div className="project-step-icon"><Cloud size={22} /></div>
+              <div className="project-step-copy"><h3>تشغيل Applio على Colab</h3><p>افتح دفتر Applio الرسمي، شغّل خلايا الإعداد والتشغيل، وانتظر ظهور رابط Gradio.</p></div>
+              <button className="button button-primary button-full" onClick={openColab}>فتح Google Colab <ExternalLink size={16} /></button>
+              <p className="micro-note"><Info size={13} /> موارد GPU ومدة الجلسة تخضع لحدود Google Colab.</p>
             </section>
-            <section className="panel note-panel">
-              <div className="note-icon"><ShieldCheck size={20} /></div>
-              <div><h3>خصوصيتك أولاً</h3><p>لا نطلب كلمة مرور Google أو ملفات تعريف الارتباط أو رموز الجلسات. تتم المصادقة والتفويض داخل صفحات Google الرسمية.</p><button className="text-button" onClick={() => navigate("guide")}>اقرأ دليل الاتصال <ArrowLeft size={15} /></button></div>
+            <section className="panel project-step-card project-link-card">
+              <div className="project-step-number">02</div>
+              <div className="project-step-icon"><Link2 size={22} /></div>
+              <div className="project-step-copy"><h3>ربط المشروع</h3><p>بعد تشغيل Applio، انسخ رابط المشاركة الذي ينتهي بـ <code>gradio.live</code> والصقه هنا.</p></div>
+              <label className="field-label" htmlFor="home-gradio-url">رابط تطبيق Applio في Colab</label>
+              <input id="home-gradio-url" className="text-input" dir="ltr" inputMode="url" autoComplete="url" placeholder="https://95c194d89bf572aa0b.gradio.live/" value={gradioUrl} onChange={(event) => { setGradioUrl(event.target.value); setUrlError(""); }} onKeyDown={(event) => { if (event.key === "Enter") connectProject(); }} />
+              {urlError && <p className="field-error">{urlError}</p>}
+              <button className="button button-primary button-full" onClick={connectProject}><Link2 size={16} /> اتصال وعرض Applio</button>
+              <p className="micro-note"><ShieldCheck size={14} /> يُحفظ الرابط على هذا الجهاز فقط. لن نطلب بيانات دخول Google أو رموز الجلسة.</p>
             </section>
           </div>
+          <section className="panel privacy-note-panel">
+            <div className="note-icon"><ShieldCheck size={20} /></div>
+            <div><h3>خصوصيتك أولاً</h3><p>سجّل الدخول وامنح أذونات Drive داخل Google Colab نفسه. لا تدخل كلمة مرور Google أو رموز الوصول في abbasdeep.</p><button className="text-button" onClick={() => navigate("guide")}>اقرأ دليل التشغيل <ArrowLeft size={15} /></button></div>
+          </section>
         </>
       );
     }
@@ -236,6 +266,50 @@ function App() {
       );
     }
 
+    if (page === "connect") {
+      return (
+        <div className="content-column connect-workspace">
+          <section className="panel connect-panel">
+            <div className="panel-title-row">
+              <div><h3>ربط مشروع Applio</h3><p>الصق رابط Gradio الذي أنشأته جلسة Colab.</p></div>
+              <span className={`connect-badge ${activeGradioUrl ? "connected-badge" : ""}`}><Link2 size={14} /> {activeGradioUrl ? "تم إدخال الرابط" : "بانتظار الرابط"}</span>
+            </div>
+            <label className="field-label" htmlFor="gradio-url">رابط تطبيق Applio</label>
+            <input id="gradio-url" className="text-input" dir="ltr" inputMode="url" autoComplete="url" placeholder="https://95c194d89bf572aa0b.gradio.live/" value={gradioUrl} onChange={(event) => { setGradioUrl(event.target.value); setUrlError(""); }} onKeyDown={(event) => { if (event.key === "Enter") connectProject(); }} />
+            {urlError && <p className="field-error">{urlError}</p>}
+            <div className="connect-actions">
+              <button className="button button-primary" onClick={connectProject}><Link2 size={16} /> اتصال بالمشروع</button>
+              <button className="button button-soft" onClick={openApplioExternally} disabled={!activeGradioUrl}><ExternalLink size={16} /> فتح خارجياً</button>
+              <button className="button button-soft" onClick={disconnectProject}><X size={16} /> فصل الرابط</button>
+            </div>
+            <p className="micro-note"><Info size={14} /> إذا منع المتصفح عرض Gradio داخل إطار، استخدم زر «فتح خارجياً». قد يحتاج الرابط إلى جلسة Colab نشطة.</p>
+          </section>
+
+          {activeGradioUrl ? (
+            <section className="gradio-workspace-panel">
+              <div className="gradio-workspace-toolbar">
+                <div><span className="gradio-live-indicator" /><strong>مساحة Applio المتصلة</strong><small dir="ltr">{activeGradioUrl}</small></div>
+                <button className="icon-button" onClick={openApplioExternally} aria-label="فتح واجهة Applio في المتصفح"><ExternalLink size={18} /></button>
+              </div>
+              <div className="gradio-frame-shell">
+                <iframe className="gradio-frame" src={activeGradioUrl} title="Applio voice studio" allow="microphone; camera; autoplay; clipboard-read; clipboard-write; fullscreen" allowFullScreen loading="eager" referrerPolicy="strict-origin-when-cross-origin" />
+              </div>
+              <p className="micro-note"><ShieldCheck size={14} /> الاتصال مباشر من متصفحك إلى رابط Gradio. لا يمر الصوت أو بيانات الجلسة عبر خوادم abbasdeep.</p>
+            </section>
+          ) : (
+            <section className="panel connect-empty-state">
+              <div className="connect-empty-icon"><AudioWaveform size={32} /></div>
+              <h2>مساحة Applio جاهزة للربط</h2>
+              <p>1. شغّل دفتر Applio في Colab. 2. انسخ رابط <code>gradio.live</code> الذي يظهر في خلية التشغيل. 3. الصقه في الحقل أعلاه واضغط «اتصال بالمشروع».</p>
+              <button className="button button-outline" onClick={openColab}><ExternalLink size={16} /> فتح دفتر Applio</button>
+            </section>
+          )}
+          <section className="info-banner"><Info size={18} /><p>رابط Gradio يكون عاماً لمن يمتلكه، وينتهي عند انتهاء الجلسة أو صلاحية الرابط. لا تشارك الرابط علناً إذا كانت واجهة Applio تتيح عمليات أو ملفات لا تريد كشفها.</p></section>
+          <section className="info-banner"><Info size={18} /><p>تنبيه Colab المجاني: قد تنهي Google الجلسة عند تجاوز واجهة الدفتر للاعتماد أساساً على واجهة ويب خارجية. لا يضمن abbasdeep أن استخدام iframe بهذه الطريقة مسموح أو مستقر على الخطة المجانية.</p></section>
+        </div>
+      );
+    }
+
     return (
       <div className="content-column">
         <section className="panel guide-panel">
@@ -244,7 +318,7 @@ function App() {
             <div className="guide-step"><span>1</span><div><strong>افتح دفتر Applio الرسمي</strong><p>سيتم فتح Google Colab في صفحة منفصلة. سجّل الدخول إلى حساب Google من موقع Google نفسه.</p></div><button className="icon-button" onClick={openColab} aria-label="فتح Colab"><ExternalLink size={17} /></button></div>
             <div className="guide-step"><span>2</span><div><strong>شغّل خلايا الدفتر</strong><p>اقرأ التعليمات، وامنح أذونات Drive التي يطلبها الدفتر عند الحاجة، ثم شغّل خلايا الإعداد والتشغيل بالترتيب.</p></div></div>
             <div className="guide-step"><span>3</span><div><strong>انتظر واجهة Applio</strong><p>عند اكتمال التشغيل، يعرض الدفتر رابط واجهة المشاركة إذا كانت متاحة في جلستك.</p></div></div>
-            <div className="guide-step"><span>4</span><div><strong>افتح رابط واجهة Applio</strong><p>يمكنك لصق رابط Gradio الذي أنشأته الجلسة في الحقل التالي. سيفتح الرابط في صفحة مستقلة؛ لا نفترض أن تضمينه داخل هذه الصفحة مدعوم.</p></div></div>
+            <div className="guide-step"><span>4</span><div><strong>اربط المشروع داخل abbasdeep</strong><p>ارجع إلى صفحة «ربط المشروع»، والصق رابط Gradio في الحقل المخصص ثم اضغط «اتصال بالمشروع» لعرض الواجهة داخل مساحة العمل إذا سمح المتصفح بذلك.</p></div><button className="icon-button" onClick={() => navigate("connect")} aria-label="ربط المشروع"><Link2 size={17} /></button></div>
           </div>
           <a className="button button-primary button-full" href={COLAB_URL} target="_blank" rel="noreferrer">فتح دفتر Applio الرسمي <ExternalLink size={16} /></a>
         </section>
@@ -266,18 +340,14 @@ function App() {
           <p className="micro-note">أضفنا في المستودع تحسينات CSS اختيارية لعناصر Applio الصغيرة، مع أداة تطبيق آمنة وقابلة للتراجع. وهي مخصصة لبيئة محلية أو بيئة تشغيل تسمح بالواجهة الخارجية، وليست التفافاً على قيود Colab المجاني.</p>
         </section>
 
-        <section className="panel connect-panel">
-          <div className="panel-title-row"><div><h3>رابط واجهة Applio</h3><p>لبيئة تشغيل تسمح باستخدام واجهة ويب خارجية؛ ليس لاستخدام Colab المجاني كواجهة أساسية.</p></div><span className="connect-badge"><Link2 size={14} /> ربط يدوي</span></div>
-          <label className="field-label" htmlFor="gradio-url">رابط المشاركة</label>
-          <input id="gradio-url" className="text-input" dir="ltr" inputMode="url" placeholder="https://xxxxx.gradio.live" value={gradioUrl} onChange={(event) => { setGradioUrl(event.target.value); setUrlError(""); }} />
-          {urlError && <p className="field-error">{urlError}</p>}
-          <div className="connect-actions"><button className="button button-primary" onClick={openApplio}><ExternalLink size={16} /> فتح واجهة Applio</button><button className="button button-soft" onClick={() => { setGradioUrl(""); localStorage.removeItem("abbasdeep-gradio-url"); setUrlError(""); setNotice("تم مسح رابط الجلسة المحفوظ."); }}><RefreshCw size={16} /> مسح الرابط</button></div>
-          <p className="micro-note"><ShieldCheck size={14} /> يُحفظ الرابط محلياً على هذا الجهاز فقط. لا تلصق كلمات مرور أو رموز وصول أو روابط خاصة تحتوي على أسرار.</p>
+        <section className="panel guide-connect-cta">
+          <div><h3>جاهز لربط Applio؟</h3><p>أدخل رابط Gradio من صفحة ربط المشروع ليظهر داخل abbasdeep.</p></div>
+          <button className="button button-primary" onClick={() => navigate("connect")}><Link2 size={16} /> الانتقال إلى ربط المشروع</button>
         </section>
         <section className="info-banner"><Info size={18} /><p>قد تتوقف جلسة Colab أو ينتهي رابط المشاركة عند انتهاء الجلسة. افتح الدفتر مجدداً لإنشاء جلسة جديدة عند الحاجة.</p></section>
       </div>
     );
-  }, [page, selectedAudio, audioUrl, trainingFiles, gradioUrl, urlError]);
+  }, [page, selectedAudio, audioUrl, trainingFiles, gradioUrl, activeGradioUrl, urlError]);
 
   return (
     <div className="app-shell">
