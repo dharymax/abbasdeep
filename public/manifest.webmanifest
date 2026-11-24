@@ -1,0 +1,21 @@
+{
+  "id": "/",
+  "name": "abbasdeep — استوديو الأصوات",
+  "short_name": "abbasdeep",
+  "description": "واجهة موبايل مساعدة لسير عمل Applio على Google Colab",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f7fb",
+  "theme_color": "#f7f7fb",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
