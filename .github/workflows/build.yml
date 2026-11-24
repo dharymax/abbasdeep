@@ -20,3 +20,5 @@ jobs:
         run: npm install
       - name: Type-check and build
         run: npm run build
+      - name: Validate Colab notebook JSON
+        run: python -m json.tool notebooks/abbasdeep.ipynb > /dev/null

@@ -1,55 +1,36 @@
 # abbasdeep
 
-**A mobile-first Arabic companion for the existing Applio + Google Colab workflow.**
+**Arabic-first Applio companion notebook for Google Colab.**
 
-This repository contains the first runnable web/PWA interface for **abbasdeep**. It is a mobile-friendly companion shell; Applio remains the audio engine and Google Colab remains the execution environment.
+The main application now launches from the user's Google Colab notebook. The notebook prepares Applio in the runtime, syncs model/training folders with Google Drive, and displays the abbasdeep-branded interface inline in the notebook output. No private GPU server is needed.
 
-## Included in this first milestone
+## Main entry point
 
-- Arabic-first RTL responsive dashboard.
-- Navigation for conversion, training, voice library, and setup guide.
-- One-tap launch of the official Applio Colab notebook.
-- Local audio preview before handing the workflow to Applio.
-- Dedicated "Connect project" screen: save an Applio `.gradio.live` URL and launch it in the current browser tab or a new tab.
-- PWA manifest, app icon, and a small offline app-shell cache.
+- Notebook: [notebooks/abbasdeep.ipynb](notebooks/abbasdeep.ipynb)
+- Open in Colab: https://colab.research.google.com/github/dharymax/abbasdeep/blob/main/notebooks/abbasdeep.ipynb
 
-## Important integration boundary
+## How it works
 
-abbasdeep does **not** control a Colab runtime, mount Drive, upload training files to Colab, or perform voice conversion itself yet. Google sign-in, Drive authorization, notebook execution, and the Applio runtime remain in Google's/Applio's own interfaces. The app never asks for a Google password, browser cookie, OAuth token, or Colab session credential.
+1. Open the notebook in your Google account.
+2. Mount Google Drive when prompted.
+3. Install the upstream Applio runtime in the Colab session.
+4. Sync model/training folders with `MyDrive/abbasdeepBackup`.
+5. Run the final cell. The Arabic, RTL, mobile-refined abbasdeep interface is displayed inline inside the notebook output.
 
-The app does not proxy the Gradio session. It opens the supplied share URL directly in the current or a new browser tab. Official Gradio embedding instructions cover Hugging Face Spaces or a server you own; they do not guarantee embedding a temporary `.gradio.live` share URL. Google Colab Free may terminate sessions that bypass the notebook UI to interact primarily through an external web UI, so this is not presented as a guaranteed or policy-approved Colab Free workflow. See [the connection guide](docs/MOBILE_APPLIO.md).
+The notebook uses the upstream Applio engine and UI builders, with an abbasdeep identity, Arabic language selection, RTL/mobile refinements, and inline notebook launch. The notebook itself is the main app entry; it does not ask you to paste a Gradio URL into an external website.
 
-## Run locally
+## Colab limitations and responsible use
 
-Requires Node.js 20 or newer.
+Colab GPU availability and session duration are dynamic and not guaranteed. Its FAQ prohibits creating deepfakes on managed runtimes and notes that free sessions may be terminated when users bypass the notebook UI to use an external web UI for content generation. abbasdeep is therefore designed to display the interface inside the notebook.
 
-```bash
-npm install
-npm run dev
-```
+Use only voice samples you own or are explicitly authorized to process. Do not impersonate people or mislead listeners. Do not use Colab for activities prohibited by its terms.
 
-Create a production build:
+## Upstream
 
-```bash
-npm run build
-npm run preview
-```
+- [Applio](https://github.com/IAHispano/Applio)
+- [Google Colab FAQ](https://research.google.com/colaboratory/faq.html)
+- [Gradio share links](https://gradio.app/guides/understanding-gradio-share-links)
 
-## Install as an app
+## Web launcher
 
-After deploying the production build over HTTPS, open it in a supported mobile browser and choose **Add to Home Screen / Install app**. Capacitor packaging can be added after the web flow is stable.
-
-## Upstream links
-
-- [Applio source](https://github.com/IAHispano/Applio)
-- [Official Applio Colab notebook](https://colab.research.google.com/github/iahispano/applio/blob/main/assets/Applio.ipynb)
-- [Google Colab FAQ and usage limits](https://research.google.com/colaboratory/faq.html)
-
-## Responsible use
-
-Use voice models only for voices you own or have explicit permission to use. Do not use generated or converted audio to impersonate someone or mislead listeners.
-
-
-## Mobile Applio interface
-
-The upstream Applio Gradio interface already includes responsive breakpoints. An optional additive CSS patch and a safe apply/restore script are included under `patches/` and `tools/`. See [the mobile compatibility notes](docs/MOBILE_APPLIO.md). The patch is intended only for a runtime where external web UI use is permitted; Colab Free must remain notebook-first.
+The React/PWA in this repository is now a launchpad and guide. Audio processing and the Applio UI run inside the notebook runtime.

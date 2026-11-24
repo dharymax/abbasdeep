@@ -1,24 +1,31 @@
-# ربط واجهة Applio داخل abbasdeep
+# abbasdeep Colab runtime
 
-## الاستخدام
+## Intended workflow
 
-1. افتح دفتر Applio في Colab وشغّل خلايا الدفتر وفق خطواته.
-2. انسخ رابط Gradio العام الذي يظهر بعد تشغيل الخادم، مثل `https://xxxxx.gradio.live/`.
-3. افتح abbasdeep ثم انتقل إلى **ربط المشروع**.
-4. الصق الرابط واضغط **اتصال بالمشروع**.
-5. سيحفظ abbasdeep الرابط ويعرض خيارات تشغيل مباشرة: فتحه في علامة التبويب الحالية (ثم الرجوع بزر المتصفح) أو فتحه في علامة تبويب جديدة. لا يعتمد التطبيق على iframe لأن تعليمات Gradio الرسمية تشرح التضمين للتطبيقات المستضافة على Hugging Face Spaces أو خادم تملكه، ولا تضمنه لروابط المشاركة `.gradio.live`.
+The main application is the Gradio interface rendered inline by the Colab notebook, not an external website embedding a `.gradio.live` URL.
 
-الربط مباشر من المتصفح إلى رابط Gradio؛ لا يوجد خادم وسيط ولا نقل لبياناتك عبر abbasdeep. يحفظ التطبيق الرابط محلياً في المتصفح كي لا تحتاج إلى لصقه في كل مرة.
+1. Open `notebooks/abbasdeep.ipynb` using the Google Colab link in the repository README.
+2. Run the Drive mount cell and authorize the account.
+3. Run the setup cell; it downloads Applio and its dependencies into the Colab runtime.
+4. Run the Drive synchronization cell.
+5. Run the branding/mobile setup cell.
+6. Run the final cell. The Gradio interface is launched with `inline=True`, so Colab displays it in the notebook output.
 
-## الروابط العامة والخصوصية
+A Gradio share URL may also appear in the cell output. It is not required to use the embedded notebook interface. Do not make a free Colab runtime primarily operate through a separate external web UI.
 
-روابط Gradio Share عامة لمن يمتلك الرابط، وتعمل كأنبوب إلى تطبيق Gradio الذي يعمل داخل جلسة التشغيل. لا ترسل الرابط إلى أشخاص آخرين إذا كانت الواجهة تعرض نماذج أو ملفات أو وظائف لا تريد مشاركتها. صلاحية الرابط مرتبطة بخدمة المشاركة وحالة جلسة التشغيل.
+## What is customized
 
-## ملاحظة Google Colab Free
+- Product name and logo changed to abbasdeep in the interface.
+- Arabic language selection enabled through Applio's existing `ar_AR` translation.
+- RTL layout adjustments.
+- Mobile menu, touch target, tab overflow, input size, and output-grid refinements.
+- Models and training logs synchronized with `MyDrive/abbasdeepBackup`.
 
-توضح سياسة Colab أن تجاوز واجهة الدفتر للتفاعل أساساً عبر واجهة ويب خارجية قد يؤدي إلى إنهاء جلسات Colab المجانية. لذلك يضيف abbasdeep عرض iframe كميزة تقنية للروابط التي تسمح بيئة تشغيلها بهذا الاستخدام، لكنه لا يضمن أن هذا النمط مسموح أو مستقر على Colab Free. استخدم واجهة الدفتر نفسها إذا كنت تعتمد على موارد Colab المجانية، ولا تحاول إخفاء استخدام الواجهة الخارجية أو تجاوز قيود الجلسة.
+## Limitations
 
-المراجع:
-- [Gradio share links](https://gradio.app/guides/understanding-gradio-share-links)
-- [Gradio sharing and embedding](https://gradio.app/main/guides/sharing-your-app)
-- [Google Colab FAQ](https://research.google.com/colaboratory/faq.html)
+- This notebook does not create a permanent backend or guarantee GPU availability.
+- Colab may terminate sessions due to dynamic limits, idle timeouts, or its usage policy.
+- Google Colab managed runtimes prohibit creating deepfakes. Use only permitted, non-deceptive processing and obey Colab's terms.
+- The notebook must remain the primary interface for this free-runtime workflow.
+
+See [Google Colab FAQ](https://research.google.com/colaboratory/faq.html).
