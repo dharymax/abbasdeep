@@ -9,6 +9,18 @@ The main application now launches from the user's Google Colab notebook. The not
 - Notebook: [notebooks/abbasdeep.ipynb](notebooks/abbasdeep.ipynb)
 - Open in Colab: https://colab.research.google.com/github/dharymax/abbasdeep/blob/main/notebooks/abbasdeep.ipynb
 
+## Open the private notebook in Colab
+
+Because this repository is private, the first time you open it you may need to authorize Colab's GitHub integration:
+
+1. Open [Google Colab](https://colab.research.google.com/).
+2. Choose **File → Open notebook → GitHub**.
+3. Enable **Include Private Repos**.
+4. Authorize Colab to read your GitHub repositories.
+5. Find `dharymax/abbasdeep` and open `notebooks/abbasdeep.ipynb`.
+
+Alternatively, download the notebook from [GitHub](https://github.com/dharymax/abbasdeep/blob/main/notebooks/abbasdeep.ipynb) and use **File → Upload notebook** in Colab.
+
 ## How it works
 
 1. Open the notebook in your Google account.
