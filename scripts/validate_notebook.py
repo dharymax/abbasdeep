@@ -56,8 +56,10 @@ def main() -> int:
 
     if "inline=True" not in branding_source:
         raise SystemExit("The notebook no longer configures the interface for inline Colab display.")
-    if "runpy.run_path" not in launch_source:
-        raise SystemExit("The notebook launch cell no longer runs the Applio app in the notebook kernel.")
+    if '"/.venv/bin/python"' in launch_source or '".venv" / "bin" / "python"' not in launch_source:
+        raise SystemExit("The notebook launch cell must use Applio's virtual-environment Python.")
+    if "subprocess.run(" not in launch_source or "str(VENV_PYTHON)" not in launch_source:
+        raise SystemExit("The notebook launch cell must launch app.py with the virtual-environment interpreter.")
 
     print("Notebook JSON: valid")
     print("Branding/setup cell: valid Python")
