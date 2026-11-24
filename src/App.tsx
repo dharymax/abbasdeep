@@ -3,7 +3,7 @@ import {
   AudioLines, AudioWaveform, ArrowLeft, ArrowUpLeft, BookOpen, Check,
   CheckCircle2, ChevronLeft, CircleHelp, Cloud, ExternalLink, FileAudio,
   FileUp, FolderOpen, Headphones, Home, Info, Link2, Play, Plus,
-  RefreshCw, ShieldCheck, Sparkles, Upload, Waves, X, Zap
+  RefreshCw, ShieldCheck, Smartphone, Sparkles, Upload, Waves, X, Zap
 } from "lucide-react";
 
 const COLAB_URL = "https://colab.research.google.com/github/iahispano/applio/blob/main/assets/Applio.ipynb";
@@ -249,8 +249,25 @@ function App() {
           <a className="button button-primary button-full" href={COLAB_URL} target="_blank" rel="noreferrer">فتح دفتر Applio الرسمي <ExternalLink size={16} /></a>
         </section>
 
+        <section className="panel mobile-compat-panel">
+          <div className="panel-title-row">
+            <div><h3><Smartphone size={17} /> تحسين العرض على الهاتف</h3><p>واجهة Applio الحديثة تتضمن بالفعل تخطيطاً متجاوباً.</p></div>
+            <span className="connect-badge">Mobile layout</span>
+          </div>
+          <div className="mobile-feature-grid">
+            <div><CheckCircle2 size={17} /><span><strong>قائمة جانبية مختصرة</strong><small>تتحول إلى زر قائمة عند الشاشات الصغيرة.</small></span></div>
+            <div><CheckCircle2 size={17} /><span><strong>تنقل مناسب للمس</strong><small>أقسام الواجهة تظهر في شبكة بدلاً من الشريط الجانبي.</small></span></div>
+            <div><CheckCircle2 size={17} /><span><strong>نتائج عمودية</strong><small>مخرجات الصوت والرسوم تنتقل إلى عمود واحد على الهاتف.</small></span></div>
+          </div>
+          <div className="mobile-policy-note">
+            <strong><Info size={15} /> تنبيه مهم لمستخدمي Colab المجاني</strong>
+            <p>تنص سياسة Google على أن تجاوز واجهة الدفتر للاعتماد أساساً على واجهة ويب خارجية غير مسموح به في بيئة Colab المجانية. لذلك افتح الدفتر واستخدم واجهته بوصفها مساحة العمل الأساسية. لا تستخدم رابط Gradio كواجهة التشغيل الرئيسية في جلسة Colab المجانية.</p>
+          </div>
+          <p className="micro-note">أضفنا في المستودع تحسينات CSS اختيارية لعناصر Applio الصغيرة، مع أداة تطبيق آمنة وقابلة للتراجع. وهي مخصصة لبيئة محلية أو بيئة تشغيل تسمح بالواجهة الخارجية، وليست التفافاً على قيود Colab المجاني.</p>
+        </section>
+
         <section className="panel connect-panel">
-          <div className="panel-title-row"><div><h3>رابط جلسة Applio</h3><p>الصق رابط Gradio الذي يعرضه الدفتر بعد التشغيل.</p></div><span className="connect-badge"><Link2 size={14} /> ربط يدوي</span></div>
+          <div className="panel-title-row"><div><h3>رابط واجهة Applio</h3><p>لبيئة تشغيل تسمح باستخدام واجهة ويب خارجية؛ ليس لاستخدام Colab المجاني كواجهة أساسية.</p></div><span className="connect-badge"><Link2 size={14} /> ربط يدوي</span></div>
           <label className="field-label" htmlFor="gradio-url">رابط المشاركة</label>
           <input id="gradio-url" className="text-input" dir="ltr" inputMode="url" placeholder="https://xxxxx.gradio.live" value={gradioUrl} onChange={(event) => { setGradioUrl(event.target.value); setUrlError(""); }} />
           {urlError && <p className="field-error">{urlError}</p>}

@@ -48,3 +48,8 @@ After deploying the production build over HTTPS, open it in a supported mobile b
 ## Responsible use
 
 Use voice models only for voices you own or have explicit permission to use. Do not use generated or converted audio to impersonate someone or mislead listeners.
+
+
+## Mobile Applio interface
+
+The upstream Applio Gradio interface already includes responsive breakpoints. An optional additive CSS patch and a safe apply/restore script are included under `patches/` and `tools/`. See [the mobile compatibility notes](docs/MOBILE_APPLIO.md). The patch is intended only for a runtime where external web UI use is permitted; Colab Free must remain notebook-first.

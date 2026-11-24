@@ -1,0 +1,55 @@
+/* ABBASDEEP MOBILE OVERRIDES v1
+   Additive responsive refinements for Applio's existing Gradio shell.
+   Apply only to a runtime where external web UI use is permitted.
+*/
+@media (max-width: 800px) {
+  html, body { max-width: 100%; overflow-x: hidden; }
+  .gradio-container, .gradio-container .main, #applio-shell, #applio-content, .applio-page {
+    width: 100% !important; min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important;
+  }
+  #applio-content { padding: 18px 12px 14px !important; overflow-x: clip; }
+  .applio-page > .column { min-width: 0 !important; gap: 12px !important; }
+  .applio-page .row { min-width: 0 !important; flex-wrap: wrap !important; gap: 10px !important; }
+  .applio-page .row > *, .applio-page .block, .applio-page .form, .applio-card {
+    min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important;
+  }
+  .applio-page .tab-nav, .applio-page .tab-container[role="tablist"] {
+    width: 100% !important; max-width: 100% !important; min-width: 0 !important;
+    overflow-x: auto !important; overflow-y: hidden !important; flex-wrap: nowrap !important;
+    overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: thin;
+  }
+  .applio-page .tab-nav button, .applio-page .tab-container[role="tablist"] button {
+    flex: 0 0 auto !important; min-width: max-content !important; min-height: 42px !important; white-space: nowrap;
+  }
+  .applio-page input:not([type="checkbox"]):not([type="radio"]), .applio-page textarea, .applio-page select {
+    min-height: 44px !important; max-width: 100% !important; font-size: 16px !important;
+  }
+  .applio-page button, #applio-navigation button.applio-nav-item { min-height: 44px; touch-action: manipulation; }
+  .applio-page audio, .applio-page video, .applio-page img, .applio-page canvas { max-width: 100% !important; }
+  .applio-page .audio-container, .applio-page .image-container, .applio-page .wrap, .applio-page .file-preview {
+    min-width: 0 !important; max-width: 100% !important;
+  }
+  .applio-page .dataframe, .applio-page table { max-width: 100%; }
+  .toast-wrap {
+    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    left: 10px !important; right: 10px !important; width: auto !important; max-width: none !important;
+  }
+}
+@media (max-width: 480px) {
+  #applio-content { padding: 14px 10px 12px !important; }
+  .applio-page-heading { align-items: flex-start; }
+  .applio-page-heading h1 { font-size: 21px !important; line-height: 1.3; }
+  .applio-card { padding: 12px !important; border-radius: 10px !important; }
+  .applio-card .applio-card-heading { font-size: 16px !important; }
+  .applio-page .row > * { flex: 1 1 100% !important; }
+  .applio-output-row, .applio-f0-results { grid-template-columns: minmax(0, 1fr) !important; }
+  .applio-page .tab-nav button, .applio-page .tab-container[role="tablist"] button {
+    padding-inline: 10px !important; font-size: 11px !important;
+  }
+  .applio-page .block > label, .applio-page label > span { line-height: 1.45; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (max-width: 900px) {
+  #applio-content { padding-top: 12px !important; }
+  .applio-brand { min-height: 30px; }
+  #applio-sidebar { margin-top: 8px !important; }
+}
