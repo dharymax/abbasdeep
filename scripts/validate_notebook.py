@@ -58,8 +58,14 @@ def main() -> int:
         raise SystemExit("The notebook no longer configures the interface for inline Colab display.")
     if '"/.venv/bin/python"' in launch_source or '".venv" / "bin" / "python"' not in launch_source:
         raise SystemExit("The notebook launch cell must use Applio's virtual-environment Python.")
-    if "subprocess.run(" not in launch_source or "str(VENV_PYTHON)" not in launch_source:
-        raise SystemExit("The notebook launch cell must launch app.py with the virtual-environment interpreter.")
+    if "subprocess.Popen(" not in launch_source or '["--listen"' in launch_source:
+        raise SystemExit("The notebook launch cell must stream a subprocess using Popen.")
+    if '"--share"' not in launch_source or '"-u"' not in launch_source:
+        raise SystemExit("The notebook launch cell must enable Gradio sharing and unbuffered output.")
+    if "gradio\\\\.live" not in launch_source:
+        raise SystemExit("The notebook launch cell must detect the generated Gradio share URL.")
+    if "display(HTML(" not in launch_source:
+        raise SystemExit("The notebook launch cell must display a clickable share URL.")
 
     print("Notebook JSON: valid")
     print("Branding/setup cell: valid Python")
