@@ -10,14 +10,14 @@ This repository contains the first runnable web/PWA interface for **abbasdeep**.
 - Navigation for conversion, training, voice library, and setup guide.
 - One-tap launch of the official Applio Colab notebook.
 - Local audio preview before handing the workflow to Applio.
-- Dedicated "Connect project" screen: enter an Applio `.gradio.live` URL and try to show it directly in an iframe, with an external-browser fallback.
+- Dedicated "Connect project" screen: save an Applio `.gradio.live` URL and launch it in the current browser tab or a new tab.
 - PWA manifest, app icon, and a small offline app-shell cache.
 
 ## Important integration boundary
 
 abbasdeep does **not** control a Colab runtime, mount Drive, upload training files to Colab, or perform voice conversion itself yet. Google sign-in, Drive authorization, notebook execution, and the Applio runtime remain in Google's/Applio's own interfaces. The app never asks for a Google password, browser cookie, OAuth token, or Colab session credential.
 
-The app does not proxy the Gradio session: the browser connects directly to the supplied share URL. Embedding depends on remote response headers and browser behavior; use the external-browser fallback if framing is blocked. Google Colab Free may terminate sessions that bypass the notebook UI to interact primarily through an external web UI, so this is not presented as a guaranteed or policy-approved Colab Free workflow. See [the connection guide](docs/MOBILE_APPLIO.md).
+The app does not proxy the Gradio session. It opens the supplied share URL directly in the current or a new browser tab. Official Gradio embedding instructions cover Hugging Face Spaces or a server you own; they do not guarantee embedding a temporary `.gradio.live` share URL. Google Colab Free may terminate sessions that bypass the notebook UI to interact primarily through an external web UI, so this is not presented as a guaranteed or policy-approved Colab Free workflow. See [the connection guide](docs/MOBILE_APPLIO.md).
 
 ## Run locally
 

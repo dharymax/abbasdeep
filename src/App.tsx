@@ -91,6 +91,11 @@ function App() {
     window.open(activeGradioUrl, "_blank", "noopener,noreferrer");
   };
 
+  const openApplioInCurrentTab = () => {
+    if (!activeGradioUrl) return;
+    window.location.assign(activeGradioUrl);
+  };
+
   const disconnectProject = () => {
     setActiveGradioUrl("");
     setGradioUrl("");
@@ -288,13 +293,20 @@ function App() {
           {activeGradioUrl ? (
             <section className="gradio-workspace-panel">
               <div className="gradio-workspace-toolbar">
-                <div><span className="gradio-live-indicator" /><strong>مساحة Applio المتصلة</strong><small dir="ltr">{activeGradioUrl}</small></div>
-                <button className="icon-button" onClick={openApplioExternally} aria-label="فتح واجهة Applio في المتصفح"><ExternalLink size={18} /></button>
+                <div><span className="gradio-live-indicator" /><strong>رابط Applio محفوظ</strong><small dir="ltr">{activeGradioUrl}</small></div>
+                <button className="icon-button" onClick={openApplioExternally} aria-label="فتح واجهة Applio في تبويب جديد"><ExternalLink size={18} /></button>
               </div>
-              <div className="gradio-frame-shell">
-                <iframe className="gradio-frame" src={activeGradioUrl} title="Applio voice studio" allow="microphone; camera; autoplay; clipboard-read; clipboard-write; fullscreen" allowFullScreen loading="eager" referrerPolicy="strict-origin-when-cross-origin" />
+              <div className="gradio-launch-state">
+                <div className="gradio-launch-icon"><AudioWaveform size={34} /></div>
+                <span className="eyebrow eyebrow-muted">APPLIO / GRADIO SHARE</span>
+                <h2>الرابط صالح، لكن لا يمكن ضمان عرضه داخل إطار</h2>
+                <p>تم إدخال رابط Gradio وحفظه. بعض روابط المشاركة لا تسمح بتضمين الواجهة داخل موقع آخر؛ لذلك أزلنا مساحة الإطار الرمادية. افتح Applio مباشرة في هذه الشاشة لتحصل على الواجهة التفاعلية كاملة.</p>
+                <div className="gradio-launch-actions">
+                  <button className="button button-primary button-large" onClick={openApplioInCurrentTab}><Play size={17} fill="currentColor" /> تشغيل Applio في هذه الشاشة</button>
+                  <button className="button button-outline" onClick={openApplioExternally}><ExternalLink size={16} /> فتح في تبويب جديد</button>
+                </div>
+                <p className="micro-note"><ShieldCheck size={14} /> يفتح الزر الأول رابط Gradio مباشرة في علامة التبويب الحالية. استخدم زر الرجوع في المتصفح للعودة إلى abbasdeep؛ سيبقى الرابط محفوظاً.</p>
               </div>
-              <p className="micro-note"><ShieldCheck size={14} /> الاتصال مباشر من متصفحك إلى رابط Gradio. لا يمر الصوت أو بيانات الجلسة عبر خوادم abbasdeep.</p>
             </section>
           ) : (
             <section className="panel connect-empty-state">
@@ -369,7 +381,7 @@ function App() {
       <main className="main-area">
         <header className="topbar">
           <div className="topbar-start"><button className="menu-trigger icon-button" onClick={() => setMobileMenuOpen(true)} aria-label="القائمة"><span className="menu-lines" /></button><div className="breadcrumb">استوديو الأصوات <ChevronLeft size={14} /> <strong>{currentPage.title}</strong></div></div>
-          <div className="topbar-end"><div className="runtime-pill"><span className="status-dot status-idle" /> <span>Colab غير متصل</span></div><button className="topbar-launch" onClick={openColab}><Zap size={15} /> تشغيل Colab</button><div className="profile-avatar">A</div></div>
+          <div className="topbar-end"><div className="runtime-pill"><span className="status-dot status-idle" /> <span>{activeGradioUrl ? "رابط Applio محفوظ" : "Colab غير متصل"}</span></div><button className="topbar-launch" onClick={openColab}><Zap size={15} /> تشغيل Colab</button><div className="profile-avatar">A</div></div>
         </header>
 
         <div className="page-wrap">
