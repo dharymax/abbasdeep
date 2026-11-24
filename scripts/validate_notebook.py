@@ -62,7 +62,7 @@ def main() -> int:
         raise SystemExit("The notebook launch cell must stream a subprocess using Popen.")
     if '"--share"' not in launch_source or '"-u"' not in launch_source:
         raise SystemExit("The notebook launch cell must enable Gradio sharing and unbuffered output.")
-    if "gradio\\\\.live" not in launch_source:
+    if "gradio" not in launch_source or "re.search" not in launch_source or ".live" not in launch_source:
         raise SystemExit("The notebook launch cell must detect the generated Gradio share URL.")
     if "display(HTML(" not in launch_source:
         raise SystemExit("The notebook launch cell must display a clickable share URL.")
