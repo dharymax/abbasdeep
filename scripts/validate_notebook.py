@@ -21,6 +21,15 @@ def main() -> int:
 
     branding_cell = cells.get("abbasdeep-brand-mobile")
     launch_cell = cells.get("abbasdeep-start")
+    gpu_check_cell = cells.get("abbasdeep-gpu-check")
+
+    if data.get("metadata", {}).get("accelerator") != "GPU":
+        raise SystemExit("Notebook metadata must request a GPU runtime.")
+    if data.get("metadata", {}).get("colab", {}).get("gpuType") != "T4":
+        raise SystemExit("Notebook metadata must prefer a T4 GPU.")
+    if gpu_check_cell is None:
+        raise SystemExit("GPU availability check cell is missing.")
+    ast.parse(source_of(gpu_check_cell), filename="abbasdeep-gpu-check")
     if branding_cell is None or launch_cell is None:
         raise SystemExit("Required abbasdeep setup/start cells are missing.")
 
